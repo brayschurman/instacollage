@@ -124,6 +124,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 600px;
     }
 
     #collageCanvas {
@@ -496,11 +497,19 @@
 
     function createFrame(x, y, width, height, img) {
       const canvasContainer = document.querySelector('.canvas-container');
+      const canvasRect = canvas.getBoundingClientRect();
+      const containerRect = canvasContainer.getBoundingClientRect();
+      
+      // Calculate the offset of the canvas within the container
+      const canvasOffsetX = (containerRect.width - canvasRect.width) / 2;
+      const canvasOffsetY = (containerRect.height - canvasRect.height) / 2;
+      
       const frame = document.createElement('div');
       frame.className = 'frame';
       
-      frame.style.left = (x * DISPLAY_SCALE) + 'px';
-      frame.style.top = (y * DISPLAY_SCALE) + 'px';
+      // Add the canvas offset to the frame position
+      frame.style.left = (x * DISPLAY_SCALE + canvasOffsetX) + 'px';
+      frame.style.top = (y * DISPLAY_SCALE + canvasOffsetY) + 'px';
       frame.style.width = (width * DISPLAY_SCALE) + 'px';
       frame.style.height = (height * DISPLAY_SCALE) + 'px';
 
@@ -629,20 +638,29 @@
 
       frames.forEach(frame => {
         const img = frame.querySelector('img');
-        const frameRect = canvas.getBoundingClientRect();
+        const canvasContainer = document.querySelector('.canvas-container');
+        const canvasRect = canvas.getBoundingClientRect();
+        const containerRect = canvasContainer.getBoundingClientRect();
         
-        // Convert scaled positions back to full size
-        const x = parseFloat(frame.style.left) / DISPLAY_SCALE;
-        const y = parseFloat(frame.style.top) / DISPLAY_SCALE;
+        // Get the canvas offset that we used for display
+        const canvasOffsetX = (containerRect.width - canvasRect.width) / 2;
+        const canvasOffsetY = (containerRect.height - canvasRect.height) / 2;
+        
+        // Get frame position relative to canvas by removing the offset
+        const frameX = (parseFloat(frame.style.left) - canvasOffsetX) / DISPLAY_SCALE;
+        const frameY = (parseFloat(frame.style.top) - canvasOffsetY) / DISPLAY_SCALE;
+        
+        // Get the actual image position within the frame
         const imgX = parseFloat(img.style.left) / DISPLAY_SCALE;
         const imgY = parseFloat(img.style.top) / DISPLAY_SCALE;
         const imgWidth = parseFloat(img.style.width) / DISPLAY_SCALE;
         const imgHeight = parseFloat(img.style.height) / DISPLAY_SCALE;
 
+        // Draw at the correct position
         ctx.drawImage(
           img,
-          x + imgX,
-          y + imgY,
+          frameX + imgX,
+          frameY + imgY,
           imgWidth,
           imgHeight
         );
