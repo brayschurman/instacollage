@@ -287,9 +287,8 @@
       </select>
 
       <div class="layout-options">
-        <button class="layout-btn active" onclick="setLayout('grid')">Grid</button>
         <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
-        <button class="layout-btn" onclick="setLayout('vertical')">Stacked</button>
+        <button class="layout-btn active" onclick="setLayout('vertical')">Stacked</button>
       </div>
     </div>
 
@@ -334,7 +333,7 @@
     const clearModal = document.getElementById('clearModal');
 
     let uploadedImages = [];
-    let currentLayout = 'grid';
+    let currentLayout = 'vertical';
     const DISPLAY_SCALE = 0.5;
 
     // Canvas size configurations
@@ -483,9 +482,6 @@
       const canvasContainer = document.querySelector('.canvas-container');
       
       switch (currentLayout) {
-        case 'grid':
-          createGridLayout(selectedImages);
-          break;
         case 'horizontal':
           createHorizontalLayout(selectedImages);
           break;
@@ -572,34 +568,6 @@
       });
 
       canvasContainer.appendChild(frame);
-    }
-
-    function createGridLayout(images) {
-      if (images.length === 0) return;
-
-      const cols = Math.ceil(Math.sqrt(images.length));
-      const rows = Math.ceil(images.length / cols);
-
-      // Make cells square
-      const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
-      const totalWidth = cellSize * cols;
-      const totalHeight = cellSize * rows;
-
-      // Center the grid
-      const startX = (canvas.width - totalWidth) / 2;
-      const startY = (canvas.height - totalHeight) / 2;
-
-      images.forEach((img, i) => {
-        const row = Math.floor(i / cols);
-        const col = i % cols;
-        createFrame(
-          startX + col * cellSize,
-          startY + row * cellSize,
-          cellSize,
-          cellSize,
-          img
-        );
-      });
     }
 
     function createHorizontalLayout(images) {
