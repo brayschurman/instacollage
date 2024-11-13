@@ -32,3 +32,7 @@ Hey folks, I got tired of hitting paywalls for simple collage makers, so I built
   - Pure vanilla JavaScript
   - No frameworks
   - No external libraries
+
+## 📝 To Do
+
+- [ ] Account for different sized images and ensure grids are centered
