@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create beautiful Instagram collages with this easy-to-use collage maker">
+  <meta name="keywords" content="instagram, collage, photo editor, image grid">
+  <meta name="author" content="Your Name">
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:title" content="Instagram Collage Maker">
+  <meta property="og:description" content="Create beautiful Instagram collages with this easy-to-use collage maker">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="path/to/your/social-preview-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Title -->
+  <title>Instagram Collage Maker - Create Beautiful Photo Grids</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-elevated: #252525;
+      --accent-color: #2196f3;
+      --accent-hover: #1976d2;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --danger-color: #f44336;
+      --success-color: #4caf50;
+      --border-radius: 12px;
+      --transition: all 0.2s ease-in-out;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 20px;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .controls {
+      background: var(--bg-secondary);
+      padding: 24px;
+      border-radius: var(--border-radius);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .layout-options {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .layout-btn {
+      padding: 12px 24px;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .layout-btn.active {
+      background: var(--accent-color);
+      border-color: transparent;
+    }
+
+    .layout-btn:hover:not(.active) {
+      background: var(--bg-primary);
+      border-color: var(--accent-color);
+    }
+
+    .size-select {
+      padding: 12px;
+      margin-right: 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .size-select:hover {
+      border-color: var(--accent-color);
+    }
+
+    .size-select option {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .canvas-container {
+      background: var(--bg-secondary);
+      padding: 24px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      margin: 0 auto 24px auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #collageCanvas {
+      max-width: 100%;
+      background: var(--bg-elevated);
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      height: auto;
+      display: block;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--accent-color);
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .dropzone:hover {
+      background: var(--bg-elevated);
+    }
+
+    .dropzone.dragover {
+      background: var(--bg-elevated);
+      border-color: var(--accent-hover);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      background: var(--accent-color);
+      color: var(--text-primary);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      min-width: 120px;
+    }
+
+    .action-btn.download {
+      background: var(--success-color);
+    }
+
+    .action-btn.clear {
+      background: var(--danger-color);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #imageList {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      min-height: 132px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .selected {
+      border: 2px solid var(--accent-color);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      padding: 32px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content h3 {
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .frame {
+      position: absolute;
+      overflow: hidden;
+      cursor: move;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .frame:hover {
+      box-shadow: 0 0 0 2px var(--accent-color);
+    }
+
+    .frame img {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="controls">
+      <select id="sizeSelect" class="size-select" onchange="handleSizeChange()">
+        <option value="portrait">Portrait (1080x1350)</option>
+        <option value="square">Square (1080x1080)</option>
+        <option value="landscape">Landscape (1080x566)</option>
+        <option value="story">Story (1080x1920)</option>
+      </select>
+
+      <div class="layout-options">
+        <button class="layout-btn active" onclick="setLayout('grid')">Grid</button>
+        <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
+        <button class="layout-btn" onclick="setLayout('vertical')">Stacked</button>
+      </div>
+    </div>
+
+    <div class="dropzone" id="dropzone">
+      <p>Drag and drop images here or click to upload</p>
+      <input type="file" id="fileInput" multiple accept="image/*" style="display: none">
+    </div>
+
+    <div id="imageList"></div>
+
+    <div class="canvas-container">
+      <canvas id="collageCanvas"></canvas>
+    </div>
+
+    <div class="action-buttons">
+      <button class="action-btn" onclick="createCollage()">Generate Collage</button>
+      <button class="action-btn download" onclick="downloadCollage()">Download</button>
+      <button class="action-btn clear" onclick="showClearModal()">Clear</button>
+    </div>
+  </div>
+
+  <!-- Clear confirmation modal -->
+  <div id="clearModal" class="modal">
+    <div class="modal-content">
+      <h3>Clear Collage</h3>
+      <p>What would you like to clear?</p>
+      <div class="modal-buttons">
+        <button class="action-btn" onclick="clearCanvas()">Clear Canvas Only</button>
+        <button class="action-btn clear" onclick="clearAll()">Clear All Images</button>
+        <button class="action-btn" onclick="hideClearModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('collageCanvas');
+    const ctx = canvas.getContext('2d');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const imageList = document.getElementById('imageList');
+    const sizeSelect = document.getElementById('sizeSelect');
+    const clearModal = document.getElementById('clearModal');
+
+    let uploadedImages = [];
+    let currentLayout = 'grid';
+    const DISPLAY_SCALE = 0.5;
+
+    // Canvas size configurations
+    const sizes = {
+      square: { width: 1080, height: 1080 },
+      portrait: { width: 1080, height: 1350 },
+      landscape: { width: 1080, height: 566 },
+      story: { width: 1080, height: 1920 }
+    };
+
+    // Initialize canvas
+    function initCanvas() {
+      const size = sizes[sizeSelect.value];
+      canvas.width = size.width;
+      canvas.height = size.height;
+      
+      canvas.style.width = (size.width * DISPLAY_SCALE) + 'px';
+      canvas.style.height = (size.height * DISPLAY_SCALE) + 'px';
+      
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function handleSizeChange() {
+      initCanvas();
+      if (uploadedImages.length > 0) {
+        createCollage();
+      }
+    }
+
+    // Layout button highlighting
+    function setLayout(layout) {
+      currentLayout = layout;
+      // Update button styling
+      document.querySelectorAll('.layout-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      // Recreate collage with new layout
+      if (uploadedImages.length > 0) {
+        createCollage();
+      }
+    }
+
+    // Clear functions
+    function showClearModal() {
+      clearModal.style.display = 'flex';
+    }
+
+    function hideClearModal() {
+      clearModal.style.display = 'none';
+    }
+
+    function clearCanvas() {
+      initCanvas();
+      hideClearModal();
+    }
+
+    function clearAll() {
+      uploadedImages = [];
+      imageList.innerHTML = '';
+      initCanvas();
+      hideClearModal();
+    }
+
+    // Handle file upload
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFiles);
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      handleFiles({ target: { files: e.dataTransfer.files } });
+    });
+
+    function handleFiles(e) {
+      const files = Array.from(e.target.files);
+      let loadedImages = 0;
+
+      files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+              uploadedImages.push(img);
+              loadedImages++;
+              updateImageList();
+
+              // Create collage when all images are loaded
+              if (loadedImages === files.length) {
+                createCollage();
+              }
+            };
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function updateImageList() {
+      imageList.innerHTML = '';
+      uploadedImages.forEach((img, index) => {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = img.src;
+        thumbnail.classList.add('thumbnail');
+        thumbnail.onclick = () => {
+          toggleImageSelection(index);
+          createCollage();  // Recreate collage when selection changes
+        };
+        imageList.appendChild(thumbnail);
+      });
+    }
+
+    function toggleImageSelection(index) {
+      const thumbnails = imageList.getElementsByClassName('thumbnail');
+      thumbnails[index].classList.toggle('selected');
+    }
+
+    function createCollage() {
+      initCanvas();
+
+      const selectedImages = Array.from(imageList.getElementsByClassName('thumbnail'))
+        .map((thumb, index) => thumb.classList.contains('selected') ? uploadedImages[index] : null)
+        .filter(img => img !== null);
+
+      if (selectedImages.length === 0) {
+        selectedImages.push(...uploadedImages);
+      }
+
+      // Clear any existing frames
+      const existingFrames = document.querySelectorAll('.frame');
+      existingFrames.forEach(frame => frame.remove());
+
+      // Create container for frames
+      const canvasContainer = document.querySelector('.canvas-container');
+      
+      switch (currentLayout) {
+        case 'grid':
+          createGridLayout(selectedImages);
+          break;
+        case 'horizontal':
+          createHorizontalLayout(selectedImages);
+          break;
+        case 'vertical':
+          createVerticalLayout(selectedImages);
+          break;
+      }
+    }
+
+    function createFrame(x, y, width, height, img) {
+      const canvasContainer = document.querySelector('.canvas-container');
+      const frame = document.createElement('div');
+      frame.className = 'frame';
+      
+      frame.style.left = (x * DISPLAY_SCALE) + 'px';
+      frame.style.top = (y * DISPLAY_SCALE) + 'px';
+      frame.style.width = (width * DISPLAY_SCALE) + 'px';
+      frame.style.height = (height * DISPLAY_SCALE) + 'px';
+
+      // Create and add image
+      const imgElement = document.createElement('img');
+      imgElement.src = img.src;
+      frame.appendChild(imgElement);
+
+      // Calculate initial image position to center it
+      const aspectRatio = img.width / img.height;
+      let imgWidth, imgHeight;
+      
+      if (width / height > aspectRatio) {
+        imgWidth = width * DISPLAY_SCALE;
+        imgHeight = (width / aspectRatio) * DISPLAY_SCALE;
+      } else {
+        imgHeight = height * DISPLAY_SCALE;
+        imgWidth = (height * aspectRatio) * DISPLAY_SCALE;
+      }
+
+      imgElement.style.width = imgWidth + 'px';
+      imgElement.style.height = imgHeight + 'px';
+      imgElement.style.left = ((width * DISPLAY_SCALE) - imgWidth) / 2 + 'px';
+      imgElement.style.top = ((height * DISPLAY_SCALE) - imgHeight) / 2 + 'px';
+
+      // Update drag functionality to account for scaling
+      let isDragging = false;
+      let startX, startY, initialImgX, initialImgY;
+
+      frame.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialImgX = parseFloat(imgElement.style.left);
+        initialImgY = parseFloat(imgElement.style.top);
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let newX = initialImgX + dx;
+        let newY = initialImgY + dy;
+
+        // Limit dragging bounds
+        const minX = (width * DISPLAY_SCALE) - imgWidth;
+        const minY = (height * DISPLAY_SCALE) - imgHeight;
+        
+        newX = Math.min(0, Math.max(minX, newX));
+        newY = Math.min(0, Math.max(minY, newY));
+
+        imgElement.style.left = newX + 'px';
+        imgElement.style.top = newY + 'px';
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      canvasContainer.appendChild(frame);
+    }
+
+    function createGridLayout(images) {
+      if (images.length === 0) return;
+
+      const cols = Math.ceil(Math.sqrt(images.length));
+      const rows = Math.ceil(images.length / cols);
+
+      // Make cells square
+      const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
+      const totalWidth = cellSize * cols;
+      const totalHeight = cellSize * rows;
+
+      // Center the grid
+      const startX = (canvas.width - totalWidth) / 2;
+      const startY = (canvas.height - totalHeight) / 2;
+
+      images.forEach((img, i) => {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        createFrame(
+          startX + col * cellSize,
+          startY + row * cellSize,
+          cellSize,
+          cellSize,
+          img
+        );
+      });
+    }
+
+    function createHorizontalLayout(images) {
+      if (images.length === 0) return;
+
+      const width = canvas.width / images.length;
+      images.forEach((img, i) => {
+        createFrame(
+          i * width,
+          0,
+          width,
+          canvas.height,
+          img
+        );
+      });
+    }
+
+    function createVerticalLayout(images) {
+      if (images.length === 0) return;
+
+      const height = canvas.height / images.length;
+      images.forEach((img, i) => {
+        createFrame(
+          0,
+          i * height,
+          canvas.width,
+          height,
+          img
+        );
+      });
+    }
+
+    function downloadCollage() {
+      const frames = document.querySelectorAll('.frame');
+      initCanvas();
+
+      frames.forEach(frame => {
+        const img = frame.querySelector('img');
+        const frameRect = canvas.getBoundingClientRect();
+        
+        // Convert scaled positions back to full size
+        const x = parseFloat(frame.style.left) / DISPLAY_SCALE;
+        const y = parseFloat(frame.style.top) / DISPLAY_SCALE;
+        const imgX = parseFloat(img.style.left) / DISPLAY_SCALE;
+        const imgY = parseFloat(img.style.top) / DISPLAY_SCALE;
+        const imgWidth = parseFloat(img.style.width) / DISPLAY_SCALE;
+        const imgHeight = parseFloat(img.style.height) / DISPLAY_SCALE;
+
+        ctx.drawImage(
+          img,
+          x + imgX,
+          y + imgY,
+          imgWidth,
+          imgHeight
+        );
+      });
+
+      const link = document.createElement('a');
+      link.download = 'instagram-collage.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Initialize
+    initCanvas();
+
+    // Close modal when clicking outside
+    window.onclick = (event) => {
+      if (event.target === clearModal) {
+        hideClearModal();
+      }
+    }
+  </script>
+</body>
+
+</html>
