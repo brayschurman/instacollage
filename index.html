@@ -567,6 +567,12 @@
       uploadedImages.forEach((img, index) => {
         const container = document.createElement('div');
         container.classList.add('thumbnail-container');
+        container.setAttribute('draggable', 'true');
+
+        // Add drag event listeners
+        container.addEventListener('dragstart', (e) => dragStart(e, index));
+        container.addEventListener('dragover', (e) => dragOver(e));
+        container.addEventListener('drop', (e) => drop(e, index));
 
         const thumbnail = document.createElement('img');
         thumbnail.src = img.src;
@@ -590,6 +596,34 @@
         container.appendChild(deleteIcon);
         imageList.appendChild(container);
       });
+    }
+
+    // Drag and Drop Handlers
+    let dragSrcIndex = null;
+
+    function dragStart(e, index) {
+      dragSrcIndex = index;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function drop(e, dropIndex) {
+      e.preventDefault();
+      if (dragSrcIndex === null || dragSrcIndex === dropIndex) return;
+
+      // Swap the dragged and dropped images in the array
+      [uploadedImages[dragSrcIndex], uploadedImages[dropIndex]] = [uploadedImages[dropIndex], uploadedImages[dragSrcIndex]];
+
+      // Reset the source index
+      dragSrcIndex = null;
+
+      // Update the image list and regenerate the collage
+      updateImageList();
+      createCollage();
     }
 
     function toggleImageSelection(index) {
