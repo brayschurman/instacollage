@@ -23,7 +23,7 @@
   <link rel="manifest" href="favicon/site.webmanifest" />
 
   <!-- Title -->
-  <title>Beeline Collage - The easiest way to create collages for Instagram.</title>
+  <title>Beeline Collage - The easiest way to create collages for Instagram</title>
 
   <style>
     * {
@@ -192,7 +192,16 @@
     }
 
     .action-btn.clear {
+      background: transparent;
+      border: 2px solid var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    .action-btn.clear:hover {
       background: var(--danger-color);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .action-btn:hover {
@@ -201,7 +210,7 @@
     }
 
     #imageList {
-      display: flex;
+      display: none;
       gap: 16px;
       flex-wrap: wrap;
       margin-bottom: 32px;
@@ -343,6 +352,31 @@
       letter-spacing: -0.01em;
       opacity: 0.9;
     }
+
+    .modal-buttons .action-btn.clear {
+      background: var(--danger-color);
+      border: none;
+      color: var(--text-primary);
+    }
+
+    .modal-buttons .action-btn.clear:hover {
+      background: var(--danger-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-buttons .action-btn:not(.clear) {
+      background: transparent;
+      border: 2px solid var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .modal-buttons .action-btn:not(.clear):hover {
+      background: var(--accent-color);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
   </style>
 </head>
 
@@ -350,7 +384,7 @@
   <div class="container">
     <header class="app-header">
       <h1>Beeline Collage</h1>
-      <p>The simplest way to create collages for Instagram.</p>
+      <p>The simplest way to create collages for Instagram</p>
     </header>
 
     <div class="controls">
@@ -362,8 +396,8 @@
       </select>
 
       <div class="layout-options">
-        <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
         <button class="layout-btn active" onclick="setLayout('vertical')">Stacked</button>
+        <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
       </div>
     </div>
 
@@ -379,7 +413,6 @@
     </div>
 
     <div class="action-buttons">
-      <button class="action-btn" onclick="createCollage()">Generate Collage</button>
       <button class="action-btn download" onclick="downloadCollage()">Download</button>
       <button class="action-btn clear" onclick="showClearModal()">Clear</button>
     </div>
@@ -522,6 +555,15 @@
 
     function updateImageList() {
       imageList.innerHTML = '';
+
+      // Hide imageList if there are no images
+      if (uploadedImages.length === 0) {
+        imageList.style.display = 'none';
+        return;
+      }
+
+      // Show imageList and update its contents
+      imageList.style.display = 'flex';
       uploadedImages.forEach((img, index) => {
         const container = document.createElement('div');
         container.classList.add('thumbnail-container');
@@ -536,9 +578,9 @@
 
         const deleteIcon = document.createElement('div');
         deleteIcon.classList.add('delete-icon');
-        deleteIcon.innerHTML = '×';  // Using × as a simple delete icon
+        deleteIcon.innerHTML = '×';
         deleteIcon.onclick = (e) => {
-          e.stopPropagation();  // Prevent triggering thumbnail click
+          e.stopPropagation();
           uploadedImages.splice(index, 1);
           updateImageList();
           createCollage();
@@ -734,6 +776,7 @@
 
     // Initialize
     initCanvas();
+    imageList.style.display = 'none';
 
     // Close modal when clicking outside
     window.onclick = (event) => {
