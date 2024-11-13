@@ -64,6 +64,22 @@
       margin-bottom: 32px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .controls-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .app-header {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .controls-buttons {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -108,7 +124,7 @@
       cursor: pointer;
       transition: var(--transition);
       width: 100%;
-      max-width: 300px;
+      max-width: none;
     }
 
     .size-select:hover {
@@ -327,7 +343,7 @@
     }
 
     .app-header {
-      margin-bottom: 40px;
+      margin-bottom: 24px;
       text-align: left;
     }
 
@@ -374,27 +390,46 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .action-btn.clear:disabled {
+      border-color: rgba(244, 67, 54, 0.5); /* Faded danger color */
+      color: rgba(244, 67, 54, 0.5);
+    }
+
+    .action-btn.download:disabled {
+      background: rgba(76, 175, 80, 0.5); /* Faded success color */
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <header class="app-header">
-      <h1>Beeline Collage</h1>
-      <p>The simplest way to create collages for Instagram</p>
-    </header>
-
     <div class="controls">
-      <select id="sizeSelect" class="size-select" onchange="handleSizeChange()">
-        <option value="portrait">Portrait (1080x1350)</option>
-        <option value="square">Square (1080x1080)</option>
-        <option value="landscape">Landscape (1080x566)</option>
-        <option value="story">Story (1080x1920)</option>
-      </select>
+      <div class="controls-wrapper">
+        <div class="app-header">
+          <h1>Beeline Collage</h1>
+          <p>The simplest way to create collages for Instagram</p>
+        </div>
 
-      <div class="layout-options">
-        <button class="layout-btn active" onclick="setLayout('vertical')">Stacked</button>
-        <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
+        <div class="controls-buttons">
+          <select id="sizeSelect" class="size-select" onchange="handleSizeChange()">
+            <option value="portrait">Portrait (1080x1350)</option>
+            <option value="square">Square (1080x1080)</option>
+            <option value="landscape">Landscape (1080x566)</option>
+            <option value="story">Story (1080x1920)</option>
+          </select>
+
+          <div class="layout-options">
+            <button class="layout-btn active" onclick="setLayout('vertical')">Stacked</button>
+            <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -506,7 +541,17 @@
 
       // Reinitialize canvas with white background
       initCanvas();
+      updateButtonStates();
       hideClearModal();
+    }
+
+    function updateButtonStates() {
+      const downloadBtn = document.querySelector('.action-btn.download');
+      const clearBtn = document.querySelector('.action-btn.clear');
+      const hasImages = uploadedImages.length > 0;
+      
+      downloadBtn.disabled = !hasImages;
+      clearBtn.disabled = !hasImages;
     }
 
     // Handle file upload
@@ -532,7 +577,6 @@
       const files = Array.from(e.target.files);
       let loadedImages = 0;
 
-      // Check if adding these files would exceed the limit
       if (uploadedImages.length + files.length > 4) {
         alert('You can only upload a maximum of 4 images.');
         return;
@@ -548,8 +592,8 @@
               uploadedImages.push(img);
               loadedImages++;
               updateImageList();
+              updateButtonStates();
 
-              // Create collage when all images are loaded
               if (loadedImages === files.length) {
                 createCollage();
               }
@@ -825,6 +869,11 @@
         hideClearModal();
       }
     }
+
+    // Call updateButtonStates on initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateButtonStates();
+    });
   </script>
 </body>
 
