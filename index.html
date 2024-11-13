@@ -36,8 +36,8 @@
       --bg-primary: #121212;
       --bg-secondary: #1e1e1e;
       --bg-elevated: #252525;
-      --accent-color: #2196f3;
-      --accent-hover: #1976d2;
+      --accent-color: #f16464;
+      --accent-hover: #e85555;
       --text-primary: #ffffff;
       --text-secondary: #b3b3b3;
       --danger-color: #f44336;
@@ -321,26 +321,27 @@
     }
 
     .app-header {
-      margin-bottom: 32px;
-      padding: 24px;
-      background: var(--bg-secondary);
-      border-radius: var(--border-radius);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 40px;
+      text-align: left;
     }
 
     .app-header h1 {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 700;
       margin-bottom: 8px;
-      background: linear-gradient(45deg, var(--accent-color), #64b5f6);
+      background: linear-gradient(135deg, var(--accent-color), #ff8a8a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      letter-spacing: -0.02em;
     }
 
     .app-header p {
       color: var(--text-secondary);
-      font-size: 15px;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      opacity: 0.9;
     }
   </style>
 </head>
@@ -349,7 +350,7 @@
   <div class="container">
     <header class="app-header">
       <h1>Beeline Collage</h1>
-      <p>The easiest way to create collages for Instagram.</p>
+      <p>The simplest way to create collages for Instagram.</p>
     </header>
 
     <div class="controls">
