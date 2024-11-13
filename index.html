@@ -500,6 +500,10 @@
       uploadedImages = [];
       imageList.innerHTML = '';
 
+      // Ensure the imageList is hidden
+      imageList.style.display = 'none';
+      console.log('imageList display:', imageList.style.display); // Debugging log
+
       // Reinitialize canvas with white background
       initCanvas();
       hideClearModal();
