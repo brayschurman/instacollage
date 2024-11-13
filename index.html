@@ -57,25 +57,29 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 32px 20px;
     }
 
     .controls {
       background: var(--bg-secondary);
-      padding: 24px;
+      padding: 32px;
       border-radius: var(--border-radius);
-      margin-bottom: 24px;
+      margin-bottom: 32px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
     .layout-options {
       display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 0;
     }
 
     .layout-btn {
-      padding: 12px 24px;
+      padding: 14px 28px;
       background: var(--bg-elevated);
       color: var(--text-primary);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -83,6 +87,8 @@
       cursor: pointer;
       transition: var(--transition);
       font-weight: 500;
+      min-width: 140px;
+      font-size: 15px;
     }
 
     .layout-btn.active {
@@ -96,15 +102,16 @@
     }
 
     .size-select {
-      padding: 12px;
-      margin-right: 12px;
+      padding: 14px 20px;
       border-radius: var(--border-radius);
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: var(--bg-elevated);
       color: var(--text-primary);
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
       transition: var(--transition);
+      width: 100%;
+      max-width: 300px;
     }
 
     .size-select:hover {
@@ -142,9 +149,9 @@
 
     .dropzone {
       border: 2px dashed var(--accent-color);
-      padding: 32px;
+      padding: 40px;
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
       background: var(--bg-secondary);
       border-radius: var(--border-radius);
       transition: var(--transition);
@@ -162,12 +169,13 @@
 
     .action-buttons {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       justify-content: center;
+      margin-top: 32px;
     }
 
     .action-btn {
-      padding: 12px 24px;
+      padding: 14px 32px;
       background: var(--accent-color);
       color: var(--text-primary);
       border: none;
@@ -175,7 +183,8 @@
       cursor: pointer;
       transition: var(--transition);
       font-weight: 500;
-      min-width: 120px;
+      min-width: 140px;
+      font-size: 15px;
     }
 
     .action-btn.download {
@@ -193,13 +202,13 @@
 
     #imageList {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
-      padding: 16px;
+      margin-bottom: 32px;
+      padding: 24px;
       background: var(--bg-secondary);
       border-radius: var(--border-radius);
-      min-height: 132px;
+      min-height: 140px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -237,11 +246,12 @@
 
     .modal-content {
       background: var(--bg-secondary);
-      padding: 32px;
+      padding: 40px;
       border-radius: var(--border-radius);
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      min-width: 400px;
     }
 
     .modal-content h3 {
@@ -256,7 +266,7 @@
 
     .modal-buttons {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       justify-content: center;
     }
 
@@ -264,7 +274,6 @@
       position: absolute;
       overflow: hidden;
       cursor: move;
-      border-radius: 4px;
       transition: var(--transition);
     }
 
@@ -310,11 +319,39 @@
       background: var(--danger-color);
       transform: scale(1.1);
     }
+
+    .app-header {
+      margin-bottom: 32px;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .app-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: linear-gradient(45deg, var(--accent-color), #64b5f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .app-header p {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
+    <header class="app-header">
+      <h1>Beeline Collage</h1>
+      <p>The easiest way to create collages for Instagram.</p>
+    </header>
+
     <div class="controls">
       <select id="sizeSelect" class="size-select" onchange="handleSizeChange()">
         <option value="portrait">Portrait (1080x1350)</option>
@@ -351,10 +388,9 @@
   <div id="clearModal" class="modal">
     <div class="modal-content">
       <h3>Clear Collage</h3>
-      <p>What would you like to clear?</p>
+      <p>Are you sure you want to clear all images?</p>
       <div class="modal-buttons">
-        <button class="action-btn" onclick="clearCanvas()">Clear Canvas Only</button>
-        <button class="action-btn clear" onclick="clearAll()">Clear All Images</button>
+        <button class="action-btn clear" onclick="clearAll()">Clear All</button>
         <button class="action-btn" onclick="hideClearModal()">Cancel</button>
       </div>
     </div>
@@ -424,14 +460,16 @@
       clearModal.style.display = 'none';
     }
 
-    function clearCanvas() {
-      initCanvas();
-      hideClearModal();
-    }
-
     function clearAll() {
+      // Clear all frames
+      const existingFrames = document.querySelectorAll('.frame');
+      existingFrames.forEach(frame => frame.remove());
+
+      // Clear uploaded images array and image list
       uploadedImages = [];
       imageList.innerHTML = '';
+
+      // Reinitialize canvas with white background
       initCanvas();
       hideClearModal();
     }
