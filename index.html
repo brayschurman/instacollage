@@ -528,6 +528,12 @@
       const files = Array.from(e.target.files);
       let loadedImages = 0;
 
+      // Check if adding these files would exceed the limit
+      if (uploadedImages.length + files.length > 4) {
+        alert('You can only upload a maximum of 4 images.');
+        return;
+      }
+
       files.forEach(file => {
         if (file.type.startsWith('image/')) {
           const reader = new FileReader();

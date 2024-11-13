@@ -1,8 +1,12 @@
-# 🖼️ Beeline Collage
+# 📸 Beeline Collage
 
-> The easiest way to create Instagram collages. Period.
+> The way I like to make collages.
 
-Hey folks, super excited to share Beeline Collage with you - a bare bones, browser-based collage maker built specifically for Instagram creators. No signup required, no watermarks, just good old collage-making. 🚀
+Hey folks, I got tired of hitting paywalls for simple collage makers, so I built this.
+
+## 🎥 Demo
+
+![Beeline Collage Demo](path/to/your/demo.gif)
 
 ## ✨ Features
 
@@ -16,9 +20,8 @@ Hey folks, super excited to share Beeline Collage with you - a bare bones, brows
   - Stacked (vertical)
   - Side by Side (horizontal)
   - Drag-to-position images within frames
-  - Auto-centers images for perfect composition
 
-- 💪 **Power Features**
+- 💡 **Features**
   - Drag & Drop image upload
   - Reorder images by dragging
   - Select specific images for your collage
