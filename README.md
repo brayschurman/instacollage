@@ -6,7 +6,7 @@ Hey folks, I got tired of hitting paywalls for simple collage makers, so I built
 
 ## 🎥 Demo
 
-![Beeline Collage Demo](/demo.gif)
+![Beeline Collage Demo](/demo-1.gif)
 
 ## ✨ Features
 
