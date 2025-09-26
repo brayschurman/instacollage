@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="The easiest way to create collages for Instagram.">
-  <meta name="keywords" content="instagram, collage, photo editor, image grid">
+  <meta name="description" content="The easiest way to create collages for Instagram and YouTube thumbnails.">
+  <meta name="keywords" content="instagram, collage, photo editor, image grid, youtube thumbnail, thumbnail maker">
   <meta name="author" content="Your Name">
 
   <meta property="og:title" content="Beeline Collage">
-  <meta property="og:description" content="The easiest way to create collages for Instagram.">
+  <meta property="og:description" content="The easiest way to create collages for Instagram and YouTube thumbnails.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="path/to/your/social-preview-image.jpg">
 
@@ -20,7 +20,7 @@
   <meta name="apple-mobile-web-app-title" content="Beeline Collage" />
   <link rel="manifest" href="favicon/site.webmanifest" />
 
-  <title>Beeline Collage - The easiest way to create collages for Instagram</title>
+  <title>Beeline Collage - Create collages for Instagram and YouTube thumbnails</title>
 
   <style>
     * {
@@ -141,14 +141,15 @@
       padding: 24px;
       border-radius: var(--border-radius);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 600px;
+      max-width: 90vw;
+      width: fit-content;
       margin: 0 auto 24px auto;
       border: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 600px;
+      min-height: 400px;
     }
 
     #collageCanvas {
@@ -268,6 +269,60 @@
       position: absolute;
       pointer-events: none;
       user-select: none;
+      transition: transform 0.1s ease;
+    }
+
+    .crop-controls {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 10;
+    }
+
+    .frame:hover .crop-controls {
+      opacity: 1;
+    }
+
+    .crop-btn {
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .crop-btn:hover {
+      background: var(--accent-color);
+      border-color: transparent;
+    }
+
+    .zoom-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      opacity: 0;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .frame:hover .zoom-indicator {
+      opacity: 1;
     }
 
     .thumbnail-container {
@@ -334,12 +389,14 @@
     }
 
     .action-btn.clear:disabled {
-      border-color: rgba(244, 67, 54, 0.5); /* Faded danger color */
+      border-color: rgba(244, 67, 54, 0.5);
+      /* Faded danger color */
       color: rgba(244, 67, 54, 0.5);
     }
 
     .action-btn.download:disabled {
-      background: rgba(76, 175, 80, 0.5); /* Faded success color */
+      background: rgba(76, 175, 80, 0.5);
+      /* Faded success color */
     }
   </style>
 </head>
@@ -350,7 +407,7 @@
       <div class="controls-wrapper">
         <div class="app-header">
           <h1>Beeline Collage</h1>
-          <p>The simplest way to create collages for Instagram</p>
+          <p>Create collages for Instagram and YouTube thumbnails</p>
         </div>
 
         <div class="controls-buttons">
@@ -359,6 +416,7 @@
             <option value="square">Square (1080x1080)</option>
             <option value="landscape">Landscape (1080x566)</option>
             <option value="story">Story (1080x1920)</option>
+            <option value="youtube">YouTube Thumbnail (1280x720)</option>
           </select>
 
           <div class="layout-options">
@@ -396,14 +454,15 @@
 
     let uploadedImages = [];
     let currentLayout = 'vertical';
-    const DISPLAY_SCALE = 0.5;
+    let DISPLAY_SCALE = 0.5;
 
     // Canvas size configurations
     const sizes = {
       square: { width: 1080, height: 1080 },
       portrait: { width: 1080, height: 1350 },
       landscape: { width: 1080, height: 566 },
-      story: { width: 1080, height: 1920 }
+      story: { width: 1080, height: 1920 },
+      youtube: { width: 1280, height: 720 }
     };
 
     // Initialize canvas
@@ -411,6 +470,14 @@
       const size = sizes[sizeSelect.value];
       canvas.width = size.width;
       canvas.height = size.height;
+
+      // Calculate responsive display scale based on viewport and canvas size
+      const maxDisplayWidth = Math.min(600, window.innerWidth * 0.8);
+      const maxDisplayHeight = Math.min(600, window.innerHeight * 0.6);
+
+      const scaleX = maxDisplayWidth / size.width;
+      const scaleY = maxDisplayHeight / size.height;
+      DISPLAY_SCALE = Math.min(scaleX, scaleY, 0.6); // Cap at 0.6 for larger screens
 
       canvas.style.width = (size.width * DISPLAY_SCALE) + 'px';
       canvas.style.height = (size.height * DISPLAY_SCALE) + 'px';
@@ -462,7 +529,7 @@
       const downloadBtn = document.querySelector('.action-btn.download');
       const clearBtn = document.querySelector('.action-btn.clear');
       const hasImages = uploadedImages.length > 0;
-      
+
       downloadBtn.disabled = !hasImages;
       clearBtn.disabled = !hasImages;
     }
@@ -646,28 +713,128 @@
       imgElement.src = img.src;
       frame.appendChild(imgElement);
 
-      // Calculate initial image position to center it
-      const aspectRatio = img.width / img.height;
-      let imgWidth, imgHeight;
+      // Create crop controls
+      const cropControls = document.createElement('div');
+      cropControls.className = 'crop-controls';
 
+      const zoomInBtn = document.createElement('div');
+      zoomInBtn.className = 'crop-btn';
+      zoomInBtn.innerHTML = '+';
+      zoomInBtn.title = 'Zoom In';
+
+      const zoomOutBtn = document.createElement('div');
+      zoomOutBtn.className = 'crop-btn';
+      zoomOutBtn.innerHTML = '−';
+      zoomOutBtn.title = 'Zoom Out';
+
+      const resetBtn = document.createElement('div');
+      resetBtn.className = 'crop-btn';
+      resetBtn.innerHTML = '⌂';
+      resetBtn.title = 'Reset Position & Zoom';
+
+      cropControls.appendChild(zoomInBtn);
+      cropControls.appendChild(zoomOutBtn);
+      cropControls.appendChild(resetBtn);
+      frame.appendChild(cropControls);
+
+      // Create zoom indicator
+      const zoomIndicator = document.createElement('div');
+      zoomIndicator.className = 'zoom-indicator';
+      zoomIndicator.textContent = '100%';
+      frame.appendChild(zoomIndicator);
+
+      // Initialize image properties
+      let currentZoom = 1;
+      const aspectRatio = img.width / img.height;
+      let baseImgWidth, baseImgHeight;
+
+      // Calculate base image size (fit to cover the frame)
       if (width / height > aspectRatio) {
-        imgWidth = width * DISPLAY_SCALE;
-        imgHeight = (width / aspectRatio) * DISPLAY_SCALE;
+        baseImgWidth = width * DISPLAY_SCALE;
+        baseImgHeight = (width / aspectRatio) * DISPLAY_SCALE;
       } else {
-        imgHeight = height * DISPLAY_SCALE;
-        imgWidth = (height * aspectRatio) * DISPLAY_SCALE;
+        baseImgHeight = height * DISPLAY_SCALE;
+        baseImgWidth = (height * aspectRatio) * DISPLAY_SCALE;
       }
 
-      imgElement.style.width = imgWidth + 'px';
-      imgElement.style.height = imgHeight + 'px';
-      imgElement.style.left = ((width * DISPLAY_SCALE) - imgWidth) / 2 + 'px';
-      imgElement.style.top = ((height * DISPLAY_SCALE) - imgHeight) / 2 + 'px';
+      function updateImageDisplay() {
+        const scaledWidth = baseImgWidth * currentZoom;
+        const scaledHeight = baseImgHeight * currentZoom;
 
-      // Update drag functionality to account for scaling
+        imgElement.style.width = scaledWidth + 'px';
+        imgElement.style.height = scaledHeight + 'px';
+
+        // Update zoom indicator
+        zoomIndicator.textContent = Math.round(currentZoom * 100) + '%';
+
+        // Constrain position after zoom change
+        constrainImagePosition();
+      }
+
+      function constrainImagePosition() {
+        const scaledWidth = baseImgWidth * currentZoom;
+        const scaledHeight = baseImgHeight * currentZoom;
+        const frameWidth = width * DISPLAY_SCALE;
+        const frameHeight = height * DISPLAY_SCALE;
+
+        let currentX = parseFloat(imgElement.style.left) || 0;
+        let currentY = parseFloat(imgElement.style.top) || 0;
+
+        // Limit dragging bounds
+        const minX = frameWidth - scaledWidth;
+        const minY = frameHeight - scaledHeight;
+
+        currentX = Math.min(0, Math.max(minX, currentX));
+        currentY = Math.min(0, Math.max(minY, currentY));
+
+        imgElement.style.left = currentX + 'px';
+        imgElement.style.top = currentY + 'px';
+      }
+
+      function resetImagePosition() {
+        currentZoom = 1;
+        imgElement.style.left = ((width * DISPLAY_SCALE) - baseImgWidth) / 2 + 'px';
+        imgElement.style.top = ((height * DISPLAY_SCALE) - baseImgHeight) / 2 + 'px';
+        updateImageDisplay();
+      }
+
+      // Initialize image
+      resetImagePosition();
+
+      // Zoom controls
+      zoomInBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentZoom = Math.min(currentZoom * 1.2, 5); // Max 5x zoom
+        updateImageDisplay();
+      });
+
+      zoomOutBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentZoom = Math.max(currentZoom / 1.2, 0.5); // Min 0.5x zoom
+        updateImageDisplay();
+      });
+
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetImagePosition();
+      });
+
+      // Mouse wheel zoom
+      frame.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        currentZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.5), 5);
+        updateImageDisplay();
+      });
+
+      // Drag functionality
       let isDragging = false;
       let startX, startY, initialImgX, initialImgY;
 
       frame.addEventListener('mousedown', (e) => {
+        // Don't start dragging if clicking on controls
+        if (e.target.closest('.crop-controls')) return;
+
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
@@ -684,9 +851,14 @@
         let newX = initialImgX + dx;
         let newY = initialImgY + dy;
 
-        // Limit dragging bounds
-        const minX = (width * DISPLAY_SCALE) - imgWidth;
-        const minY = (height * DISPLAY_SCALE) - imgHeight;
+        // Apply constraints
+        const scaledWidth = baseImgWidth * currentZoom;
+        const scaledHeight = baseImgHeight * currentZoom;
+        const frameWidth = width * DISPLAY_SCALE;
+        const frameHeight = height * DISPLAY_SCALE;
+
+        const minX = frameWidth - scaledWidth;
+        const minY = frameHeight - scaledHeight;
 
         newX = Math.min(0, Math.max(minX, newX));
         newY = Math.min(0, Math.max(minY, newY));
@@ -698,6 +870,13 @@
       document.addEventListener('mouseup', () => {
         isDragging = false;
       });
+
+      // Store zoom info on frame for download function
+      frame._imageData = {
+        zoom: () => currentZoom,
+        baseWidth: () => baseImgWidth,
+        baseHeight: () => baseImgHeight
+      };
 
       canvasContainer.appendChild(frame);
     }
@@ -749,6 +928,8 @@
         // Get frame position relative to canvas by removing the offset
         const frameX = (parseFloat(frame.style.left) - canvasOffsetX) / DISPLAY_SCALE;
         const frameY = (parseFloat(frame.style.top) - canvasOffsetY) / DISPLAY_SCALE;
+        const frameWidth = parseFloat(frame.style.width) / DISPLAY_SCALE;
+        const frameHeight = parseFloat(frame.style.height) / DISPLAY_SCALE;
 
         // Get the actual image position within the frame
         const imgX = parseFloat(img.style.left) / DISPLAY_SCALE;
@@ -756,7 +937,13 @@
         const imgWidth = parseFloat(img.style.width) / DISPLAY_SCALE;
         const imgHeight = parseFloat(img.style.height) / DISPLAY_SCALE;
 
-        // Draw at the correct position
+        // Create a clipping path for the frame
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(frameX, frameY, frameWidth, frameHeight);
+        ctx.clip();
+
+        // Draw the image at the correct position
         ctx.drawImage(
           img,
           frameX + imgX,
@@ -764,6 +951,8 @@
           imgWidth,
           imgHeight
         );
+
+        ctx.restore();
       });
 
       const link = document.createElement('a');
