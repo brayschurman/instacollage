@@ -11,7 +11,6 @@
   <meta property="og:title" content="Beeline Collage">
   <meta property="og:description" content="The easiest way to create collages for Instagram and YouTube thumbnails.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="path/to/your/social-preview-image.jpg">
 
   <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
@@ -30,40 +29,111 @@
     }
 
     :root {
-      --bg-primary: #121212;
-      --bg-secondary: #1e1e1e;
-      --bg-elevated: #252525;
-      --accent-color: #f16464;
-      --accent-hover: #e85555;
-      --text-primary: #ffffff;
-      --text-secondary: #b3b3b3;
+      --bg-primary: #f5f5f5;
+      --bg-secondary: #ffffff;
+      --bg-elevated: #fef6e4;
+      --accent-color: #ff6b6b;
+      --accent-hover: #ff5252;
+      --text-primary: #001858;
+      --text-secondary: #172c66;
+      --border-color: #001858;
       --danger-color: #f44336;
-      --success-color: #4caf50;
-      --border-radius: 12px;
-      --transition: all 0.2s ease-in-out;
+      --success-color: #06d6a0;
+      --border-radius: 4px;
+      --border-width: 3px;
+      --shadow: 4px 4px 0px #001858;
+      --shadow-hover: 6px 6px 0px #001858;
+      --transition: all 0.1s ease;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      padding: 20px;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 20px;
+      display: grid;
+      grid-template-columns: 300px 1fr 340px;
+      gap: 24px;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    @media (max-width: 1400px) {
+      .container {
+        grid-template-columns: 240px 1fr 280px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        overflow-y: auto;
+      }
+    }
+
+    .left-panel {
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      overflow-y: auto;
+      height: 100%;
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .right-panel {
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      overflow-y: auto;
+      height: 100%;
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .center-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      overflow: hidden;
     }
 
     .controls {
       background: var(--bg-secondary);
-      padding: 32px;
+      padding: 16px 20px;
       border-radius: var(--border-radius);
-      margin-bottom: 32px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-section {
+      background: var(--bg-elevated);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: 3px 3px 0px var(--border-color);
+    }
+
+    .panel-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
     }
 
     .controls-wrapper {
@@ -92,166 +162,181 @@
     }
 
     .layout-btn {
-      padding: 14px 28px;
-      background: var(--bg-elevated);
+      padding: 12px 20px;
+      background: var(--bg-secondary);
       color: var(--text-primary);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: var(--border-width) solid var(--border-color);
       border-radius: var(--border-radius);
       cursor: pointer;
       transition: var(--transition);
-      font-weight: 500;
-      min-width: 140px;
-      font-size: 15px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 3px 3px 0px var(--border-color);
     }
 
     .layout-btn.active {
       background: var(--accent-color);
-      border-color: transparent;
+      color: white;
+      box-shadow: 3px 3px 0px var(--border-color);
+      transform: translate(1px, 1px);
     }
 
     .layout-btn:hover:not(.active) {
-      background: var(--bg-primary);
-      border-color: var(--accent-color);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--border-color);
     }
 
     .size-select {
-      padding: 14px 20px;
+      padding: 14px 40px 14px 16px;
       border-radius: var(--border-radius);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: var(--bg-elevated);
+      border: var(--border-width) solid var(--border-color);
+      background: white;
       color: var(--text-primary);
-      font-size: 15px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
       width: 100%;
       max-width: none;
+      box-shadow: 3px 3px 0px var(--border-color);
     }
 
     .size-select:hover {
-      border-color: var(--accent-color);
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0px var(--border-color);
     }
 
     .size-select option {
-      background: var(--bg-elevated);
+      background: white;
       color: var(--text-primary);
     }
 
     .canvas-container {
-      background: var(--bg-secondary);
-      padding: 24px;
+      background: #ffffff;
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 90vw;
-      width: fit-content;
-      margin: 0 auto 24px auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: var(--shadow);
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 400px;
+      flex: 1;
+      overflow: hidden;
+      padding: 40px;
     }
 
     #collageCanvas {
       max-width: 100%;
-      background: var(--bg-elevated);
-      border: 2px dashed rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      max-height: 100%;
+      background: white;
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
       height: auto;
       display: block;
+      box-shadow: 6px 6px 0px var(--border-color);
     }
 
     .dropzone {
-      border: 2px dashed var(--accent-color);
-      padding: 40px;
+      border: var(--border-width) dashed var(--accent-color);
+      padding: 32px 24px;
       text-align: center;
-      margin-bottom: 32px;
-      background: var(--bg-secondary);
+      background: white;
       border-radius: var(--border-radius);
       transition: var(--transition);
       cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     .dropzone:hover {
       background: var(--bg-elevated);
+      transform: translate(1px, 1px);
     }
 
     .dropzone.dragover {
-      background: var(--bg-elevated);
-      border-color: var(--accent-hover);
+      background: var(--accent-color);
+      color: white;
+      border-style: solid;
     }
 
     .action-buttons {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       justify-content: center;
-      margin-top: 32px;
+      flex-wrap: wrap;
     }
 
     .action-btn {
       padding: 14px 32px;
       background: var(--accent-color);
-      color: var(--text-primary);
-      border: none;
+      color: white;
+      border: var(--border-width) solid var(--border-color);
       border-radius: var(--border-radius);
       cursor: pointer;
       transition: var(--transition);
-      font-weight: 500;
-      min-width: 140px;
+      font-weight: 700;
       font-size: 15px;
+      box-shadow: 4px 4px 0px var(--border-color);
     }
 
     .action-btn.download {
       background: var(--success-color);
+      color: white;
     }
 
     .action-btn.clear {
-      background: transparent;
-      border: 2px solid var(--danger-color);
+      background: white;
       color: var(--danger-color);
+      border: var(--border-width) solid var(--danger-color);
+      box-shadow: 4px 4px 0px var(--danger-color);
     }
 
     .action-btn.clear:hover {
       background: var(--danger-color);
-      color: var(--text-primary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: white;
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--danger-color);
     }
 
     .action-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--border-color);
+    }
+
+    .action-btn.download:hover {
+      box-shadow: 2px 2px 0px var(--border-color);
     }
 
     #imageList {
       display: none;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 32px;
-      padding: 24px;
-      background: var(--bg-secondary);
-      border-radius: var(--border-radius);
-      min-height: 140px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 16px;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      min-height: 120px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .thumbnail {
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       cursor: pointer;
       transition: var(--transition);
-      border: 2px solid transparent;
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: 2px 2px 0px var(--border-color);
     }
 
     .thumbnail:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border-color);
     }
 
     .selected {
-      border: 2px solid var(--accent-color);
+      border-color: var(--accent-color);
+      box-shadow: 3px 3px 0px var(--accent-color);
     }
 
     .frame {
@@ -327,8 +412,8 @@
 
     .thumbnail-container {
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
     }
 
     .thumbnail-container:hover .delete-icon {
@@ -364,22 +449,19 @@
     }
 
     .app-header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent-color), #ff8a8a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      color: var(--text-primary);
       letter-spacing: -0.02em;
+      text-transform: uppercase;
     }
 
     .app-header p {
       color: var(--text-secondary);
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 13px;
+      font-weight: 600;
       letter-spacing: -0.01em;
-      opacity: 0.9;
     }
 
     .action-btn:disabled {
@@ -398,55 +480,241 @@
       background: rgba(76, 175, 80, 0.5);
       /* Faded success color */
     }
+
+
+    .output-stats-section {
+      background: var(--bg-elevated);
+      padding: 24px;
+      border-radius: var(--border-radius);
+      border: var(--border-width) solid var(--border-color);
+      box-shadow: 3px 3px 0px var(--border-color);
+      display: none;
+      flex: 1;
+    }
+
+    .output-stats-section.visible {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output-stats-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .output-stats-icon {
+      font-size: 32px;
+      filter: drop-shadow(0 2px 8px rgba(241, 100, 100, 0.3));
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .output-stats-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output-stats-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+      text-align: center;
+    }
+
+    .output-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .output-stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .output-stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .output-stat-value {
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+    }
+
+    .output-stat-value.highlight {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    .instagram-tips {
+      background: var(--bg-elevated);
+      padding: 20px 24px;
+      border-radius: 8px;
+      margin-top: 16px;
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .instagram-tips-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instagram-tips-list {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .instagram-tips-list li {
+      margin-bottom: 6px;
+    }
+
+    .instagram-tips-list li:last-child {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="controls">
-      <div class="controls-wrapper">
-        <div class="app-header">
-          <h1>Beeline Collage</h1>
-          <p>Create collages for Instagram and YouTube thumbnails</p>
-        </div>
+    <!-- LEFT PANEL: Tools & Settings -->
+    <div class="left-panel">
+      <div class="app-header" style="margin-bottom: 24px;">
+        <h1 style="font-size: 20px;">Beeline Collage</h1>
+        <p style="font-size: 12px;">Instagram & YouTube collages</p>
+      </div>
 
-        <div class="controls-buttons">
-          <select id="sizeSelect" class="size-select" onchange="handleSizeChange()">
-            <option value="portrait">Portrait (1080x1350)</option>
-            <option value="square">Square (1080x1080)</option>
-            <option value="landscape">Landscape (1080x566)</option>
-            <option value="story">Story (1080x1920)</option>
-            <option value="youtube">YouTube Thumbnail (1280x720)</option>
-          </select>
+      <div class="panel-section" style="margin-bottom: 16px;">
+        <div class="panel-section-title">📐 Canvas Size</div>
+        <select id="sizeSelect" class="size-select" onchange="handleSizeChange()"
+          style="width: 100%; padding: 10px; font-size: 13px;">
+          <option value="portrait">📱 Portrait (1080x1350)</option>
+          <option value="square">⬛ Square (1080x1080)</option>
+          <option value="landscape">🖼️ Landscape (1080x566)</option>
+          <option value="story">📲 Story (1080x1920)</option>
+          <option value="youtube">🎬 YouTube Thumbnail (1280x720)</option>
+        </select>
+      </div>
 
-          <div class="layout-options">
-            <button class="layout-btn active" onclick="setLayout('vertical')">Stacked</button>
-            <button class="layout-btn" onclick="setLayout('horizontal')">Side by Side</button>
-          </div>
+      <div class="panel-section" style="margin-bottom: 16px;">
+        <div class="panel-section-title">📸 Images</div>
+        <div class="dropzone" id="dropzone">
+          <p style="margin: 0; font-size: 12px;">📸 Drop or click to upload</p>
+          <input type="file" id="fileInput" multiple accept="image/*" style="display: none">
         </div>
+        <div id="imageList" style="margin-top: 12px;"></div>
+      </div>
+
+      <button class="action-btn clear" onclick="clearAll()" style="width: 100%; padding: 14px; font-size: 14px;">🗑️
+        Clear All</button>
+    </div>
+
+    <!-- CENTER PANEL: Canvas -->
+    <div class="center-panel">
+      <div class="canvas-container">
+        <canvas id="collageCanvas"></canvas>
       </div>
     </div>
 
-    <div class="dropzone" id="dropzone">
-      <p>Drag and drop images here or click to upload</p>
-      <input type="file" id="fileInput" multiple accept="image/*" style="display: none">
-    </div>
+    <!-- RIGHT PANEL: Export & Quality -->
+    <div class="right-panel">
+      <div class="output-stats-section" id="outputStatsSection" style="margin: 0;">
+        <div class="output-stats-content">
+          <div class="output-stats-icon">⬇️</div>
+          <div class="output-stats-details">
+            <div class="output-stats-title">Download Specifications</div>
+            <div class="output-stats-grid" id="outputStatsGrid"></div>
+          </div>
+        </div>
 
-    <div id="imageList"></div>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">
+              🎚️ Quality Control
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div
+                style="font-size: 15px; font-weight: 600; color: var(--accent-color); font-family: 'SF Mono', monospace;"
+                id="qualityDisplay">97.00%</div>
+              <div style="font-size: 13px; color: var(--text-secondary);" id="qualitySizeDisplay">~800 KB</div>
+            </div>
+          </div>
 
-    <div class="canvas-container">
-      <canvas id="collageCanvas"></canvas>
-    </div>
+          <input type="range" min="0" max="100" value="40" step="1"
+            style="width: 100%; height: 8px; border-radius: var(--border-radius); background: var(--bg-elevated); border: var(--border-width) solid var(--border-color); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; margin-bottom: 8px;"
+            id="qualitySlider" oninput="updateQualityDisplayNonLinear(this.value)">
 
-    <div class="action-buttons">
-      <button class="action-btn download" onclick="downloadCollage()">Download</button>
-      <button class="action-btn clear" onclick="clearAll()">Clear</button>
+          <style>
+            #qualitySlider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 24px;
+              height: 24px;
+              border-radius: var(--border-radius);
+              background: var(--accent-color);
+              cursor: pointer;
+              border: var(--border-width) solid var(--border-color);
+              box-shadow: 2px 2px 0px var(--border-color);
+            }
+
+            #qualitySlider::-moz-range-thumb {
+              width: 24px;
+              height: 24px;
+              border-radius: var(--border-radius);
+              background: var(--accent-color);
+              cursor: pointer;
+              border: var(--border-width) solid var(--border-color);
+              box-shadow: 2px 2px 0px var(--border-color);
+            }
+          </style>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button class="action-btn download" style="width: 100%; padding: 16px; font-size: 15px;"
+              onclick="downloadAtCurrentQuality()">
+              🚀 Download (Manual Quality)
+            </button>
+
+            <button class="action-btn" id="optimizeBtn"
+              style="width: 100%; padding: 16px; font-size: 15px; background: var(--text-primary); border-color: var(--text-primary);"
+              onclick="optimizeForInstagram()">
+              ✨ Auto-Optimize for Instagram (<1MB) </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
     const canvas = document.getElementById('collageCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', {
+      alpha: false,  // no transparency for better performance
+      willReadFrequently: false  // optimize for drawing operations
+    });
+
+    // disable image smoothing for crisp rendering at exact pixels
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';  // use highest quality smoothing
+
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('fileInput');
     const imageList = document.getElementById('imageList');
@@ -454,6 +722,7 @@
 
     let uploadedImages = [];
     let currentLayout = 'vertical';
+    let jpegQuality = 0.97; // quality slider value (0.95 to 1.00), default 97%
     let DISPLAY_SCALE = 0.5;
 
     // Canvas size configurations
@@ -472,15 +741,22 @@
       canvas.height = size.height;
 
       // Calculate responsive display scale based on viewport and canvas size
-      const maxDisplayWidth = Math.min(600, window.innerWidth * 0.8);
-      const maxDisplayHeight = Math.min(600, window.innerHeight * 0.6);
+      // Make canvas much bigger - use more of the available space
+      const container = document.querySelector('.canvas-container');
+      const containerRect = container.getBoundingClientRect();
+      const maxDisplayWidth = containerRect.width - 80; // account for padding
+      const maxDisplayHeight = containerRect.height - 80;
 
       const scaleX = maxDisplayWidth / size.width;
       const scaleY = maxDisplayHeight / size.height;
-      DISPLAY_SCALE = Math.min(scaleX, scaleY, 0.6); // Cap at 0.6 for larger screens
+      DISPLAY_SCALE = Math.min(scaleX, scaleY, 1.2); // allow up to 1.2x for better visibility
 
       canvas.style.width = (size.width * DISPLAY_SCALE) + 'px';
       canvas.style.height = (size.height * DISPLAY_SCALE) + 'px';
+
+      // ensure high quality rendering after canvas resize
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -488,6 +764,7 @@
 
     function handleSizeChange() {
       initCanvas();
+      updateOutputStats();
       if (uploadedImages.length > 0) {
         createCollage();
       }
@@ -501,10 +778,71 @@
         btn.classList.remove('active');
       });
       event.target.classList.add('active');
+      updateOutputStats();
       // Recreate collage with new layout
       if (uploadedImages.length > 0) {
         createCollage();
       }
+    }
+
+
+    function downloadAtCurrentQuality() {
+      downloadCollage();
+    }
+
+    // ultra-granular slider mapping: 0-100 slider maps to 95-100% quality
+    // massive precision at 99-100% where file size explodes
+    function mapSliderToQuality(sliderValue) {
+      // slider: 0-100 (100 steps total)
+      // map to quality: 95-100% (5% range)
+      // 
+      // Distribution:
+      // 0-40: 95-98% (3% across 40 steps = 0.075% per step)
+      // 40-60: 98-99% (1% across 20 steps = 0.05% per step)
+      // 60-100: 99-100% (1% across 40 steps = 0.025% per step) <- HUGE granularity here!
+
+      if (sliderValue <= 40) {
+        // 95-98% range
+        return 95 + (sliderValue * 0.075);
+      } else if (sliderValue <= 60) {
+        // 98-99% range
+        return 98 + ((sliderValue - 40) * 0.05);
+      } else {
+        // 99-100% range with maximum precision
+        return 99 + ((sliderValue - 60) * 0.025);
+      }
+    }
+
+    function updateQualityDisplayNonLinear(sliderValue) {
+      const quality = mapSliderToQuality(parseInt(sliderValue));
+      jpegQuality = quality / 100;
+
+      // update quality display with two decimals for ultra precision
+      const displayQuality = quality === 100 ? '100.00' : quality.toFixed(2);
+      document.getElementById('qualityDisplay').textContent = displayQuality + '%';
+
+      // calculate and display estimated file size based on current canvas size
+      const size = sizes[sizeSelect.value];
+      const totalPixels = size.width * size.height;
+
+      // refined estimation for 95-100% range
+      // 95%: 0.50, 97%: 0.60, 98%: 0.70, 99%: 0.85, 100%: 1.0 bytes per pixel
+      let bytesPerPixel;
+      if (quality < 97) {
+        bytesPerPixel = 0.50 + ((quality - 95) / 2) * 0.10;
+      } else if (quality < 98) {
+        bytesPerPixel = 0.60 + ((quality - 97) / 1) * 0.10;
+      } else if (quality < 99) {
+        bytesPerPixel = 0.70 + ((quality - 98) / 1) * 0.15;
+      } else if (quality < 100) {
+        bytesPerPixel = 0.85 + ((quality - 99) / 1) * 0.15;
+      } else {
+        bytesPerPixel = 1.0; // 100% quality
+      }
+
+      const estimatedBytes = totalPixels * bytesPerPixel;
+      const sizeDisplay = formatFileSize(estimatedBytes);
+      document.getElementById('qualitySizeDisplay').textContent = '~' + sizeDisplay;
     }
 
     function clearAll() {
@@ -518,7 +856,9 @@
 
       // Ensure the imageList is hidden
       imageList.style.display = 'none';
-      console.log('imageList display:', imageList.style.display);
+
+      // update output stats
+      updateOutputStats();
 
       // Reinitialize canvas with white background
       initCanvas();
@@ -526,12 +866,17 @@
     }
 
     function updateButtonStates() {
-      const downloadBtn = document.querySelector('.action-btn.download');
       const clearBtn = document.querySelector('.action-btn.clear');
+      const downloadBtn = document.querySelector('.action-btn.download');
       const hasImages = uploadedImages.length > 0;
 
-      downloadBtn.disabled = !hasImages;
-      clearBtn.disabled = !hasImages;
+      if (clearBtn) {
+        clearBtn.disabled = !hasImages;
+      }
+
+      if (downloadBtn) {
+        downloadBtn.disabled = !hasImages;
+      }
     }
 
     // Handle file upload
@@ -570,8 +915,10 @@
             img.src = e.target.result;
             img.onload = () => {
               uploadedImages.push(img);
+
               loadedImages++;
               updateImageList();
+              updateOutputStats();
               updateButtonStates();
 
               if (loadedImages === files.length) {
@@ -660,6 +1007,90 @@
     function toggleImageSelection(index) {
       const thumbnails = imageList.getElementsByClassName('thumbnail');
       thumbnails[index].classList.toggle('selected');
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function updateOutputStats() {
+      const outputStatsSection = document.getElementById('outputStatsSection');
+      const outputStatsGrid = document.getElementById('outputStatsGrid');
+
+      // hide section if no images
+      if (uploadedImages.length === 0) {
+        outputStatsSection.classList.remove('visible');
+        return;
+      }
+
+      // show section and populate data
+      outputStatsSection.classList.add('visible');
+      outputStatsGrid.innerHTML = '';
+
+      const size = sizes[sizeSelect.value];
+      const aspectRatio = (size.width / size.height).toFixed(2);
+
+      // calculate file size based on current quality setting
+      const totalPixels = size.width * size.height;
+      const quality = jpegQuality * 100;
+
+      // refined estimation for 95-100% range
+      let bytesPerPixel;
+      if (quality < 97) {
+        bytesPerPixel = 0.50 + ((quality - 95) / 2) * 0.10;
+      } else if (quality < 98) {
+        bytesPerPixel = 0.60 + ((quality - 97) / 1) * 0.10;
+      } else if (quality < 99) {
+        bytesPerPixel = 0.70 + ((quality - 98) / 1) * 0.15;
+      } else if (quality < 100) {
+        bytesPerPixel = 0.85 + ((quality - 99) / 1) * 0.15;
+      } else {
+        bytesPerPixel = 1.0; // 100% quality
+      }
+
+      const currentQuality = quality === 100 ? '100' : quality.toFixed(1);
+
+      const estimatedSizeBytes = totalPixels * bytesPerPixel;
+      const estimatedSizeFormatted = formatFileSize(estimatedSizeBytes);
+
+      // get current layout info
+      const layoutText = currentLayout === 'vertical' ? 'Stacked' : 'Side by Side';
+      const photoCount = uploadedImages.length;
+
+      // create stat items
+      const dimensionsStat = createOutputStat('Dimensions', `${size.width} × ${size.height}px`);
+      const aspectRatioStat = createOutputStat('Aspect Ratio', aspectRatio);
+      const layoutStat = createOutputStat('Layout', layoutText);
+      const photosStat = createOutputStat('Photos', photoCount.toString(), true);
+      const formatStat = createOutputStat('Format', `JPEG (${currentQuality}%)`);
+      const estimatedSizeStat = createOutputStat('Est. Size', `~${estimatedSizeFormatted}`);
+
+      outputStatsGrid.appendChild(dimensionsStat);
+      outputStatsGrid.appendChild(aspectRatioStat);
+      outputStatsGrid.appendChild(layoutStat);
+      outputStatsGrid.appendChild(photosStat);
+      outputStatsGrid.appendChild(formatStat);
+      outputStatsGrid.appendChild(estimatedSizeStat);
+    }
+
+    function createOutputStat(label, value, highlight = false) {
+      const item = document.createElement('div');
+      item.className = 'output-stat-item';
+
+      const labelSpan = document.createElement('div');
+      labelSpan.className = 'output-stat-label';
+      labelSpan.textContent = label;
+
+      const valueSpan = document.createElement('div');
+      valueSpan.className = 'output-stat-value' + (highlight ? ' highlight' : '');
+      valueSpan.textContent = value;
+
+      item.appendChild(labelSpan);
+      item.appendChild(valueSpan);
+
+      return item;
     }
 
     function createCollage() {
@@ -819,13 +1250,14 @@
         resetImagePosition();
       });
 
-      // Mouse wheel zoom
-      frame.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-        currentZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.5), 5);
-        updateImageDisplay();
-      });
+      // Disable mouse wheel zoom - only allow click and drag cropping
+      // Commenting out to prevent accidental zoom while scrolling
+      // frame.addEventListener('wheel', (e) => {
+      //   e.preventDefault();
+      //   const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+      //   currentZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.5), 5);
+      //   updateImageDisplay();
+      // });
 
       // Drag functionality
       let isDragging = false;
@@ -911,9 +1343,13 @@
       });
     }
 
-    function downloadCollage() {
+    function renderCanvas() {
       const frames = document.querySelectorAll('.frame');
       initCanvas();
+
+      // ensure high quality rendering for export
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       frames.forEach(frame => {
         const img = frame.querySelector('img');
@@ -921,29 +1357,29 @@
         const canvasRect = canvas.getBoundingClientRect();
         const containerRect = canvasContainer.getBoundingClientRect();
 
-        // Get the canvas offset that we used for display
+        // get the canvas offset that we used for display
         const canvasOffsetX = (containerRect.width - canvasRect.width) / 2;
         const canvasOffsetY = (containerRect.height - canvasRect.height) / 2;
 
-        // Get frame position relative to canvas by removing the offset
+        // get frame position relative to canvas by removing the offset
         const frameX = (parseFloat(frame.style.left) - canvasOffsetX) / DISPLAY_SCALE;
         const frameY = (parseFloat(frame.style.top) - canvasOffsetY) / DISPLAY_SCALE;
         const frameWidth = parseFloat(frame.style.width) / DISPLAY_SCALE;
         const frameHeight = parseFloat(frame.style.height) / DISPLAY_SCALE;
 
-        // Get the actual image position within the frame
+        // get the actual image position within the frame
         const imgX = parseFloat(img.style.left) / DISPLAY_SCALE;
         const imgY = parseFloat(img.style.top) / DISPLAY_SCALE;
         const imgWidth = parseFloat(img.style.width) / DISPLAY_SCALE;
         const imgHeight = parseFloat(img.style.height) / DISPLAY_SCALE;
 
-        // Create a clipping path for the frame
+        // create a clipping path for the frame
         ctx.save();
         ctx.beginPath();
         ctx.rect(frameX, frameY, frameWidth, frameHeight);
         ctx.clip();
 
-        // Draw the image at the correct position
+        // draw the image at the correct position
         ctx.drawImage(
           img,
           frameX + imgX,
@@ -954,11 +1390,93 @@
 
         ctx.restore();
       });
+    }
+
+    function downloadCollage() {
+      renderCanvas();
 
       const link = document.createElement('a');
-      link.download = 'collage.png';
-      link.href = canvas.toDataURL('image/png');
+
+      link.download = 'collage.jpg';
+      // JPEG with user-selected quality from slider
+      // Quality range: 80-100% (0.80-1.00)
+      // Instagram best practice: keep under 1MB to avoid aggressive compression
+      link.href = canvas.toDataURL('image/jpeg', jpegQuality);
+
       link.click();
+    }
+
+    async function optimizeForInstagram() {
+      const btn = document.getElementById('optimizeBtn');
+      const originalText = btn.innerHTML;
+      const originalPointerEvents = btn.style.pointerEvents;
+
+      btn.innerHTML = '⏳ Optimizing...';
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.8';
+
+      // wait a tick to let UI update
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      try {
+        renderCanvas();
+
+        const MAX_SIZE_BYTES = 1024 * 1024; // 1MB
+        // we aim for slightly less to be safe
+        const TARGET_BYTES = 990 * 1024;
+
+        let minQ = 0.5;
+        let maxQ = 1.0;
+        let bestBlob = null;
+        let bestQuality = 0;
+
+        // helper to get blob size at quality
+        const getBlobSize = async (q) => {
+          return new Promise(resolve => {
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', q);
+          });
+        };
+
+        // binary search for the highest quality < 1MB
+        // increased iterations for precision
+        for (let i = 0; i < 12; i++) {
+          const midQ = (minQ + maxQ) / 2;
+          const blob = await getBlobSize(midQ);
+
+          if (blob.size > TARGET_BYTES) {
+            // too big, need lower quality
+            maxQ = midQ;
+          } else {
+            // fits! try to get better quality
+            bestBlob = blob;
+            bestQuality = midQ;
+            minQ = midQ;
+          }
+        }
+
+        // verify we have a valid blob
+        if (!bestBlob) {
+          // fallback: if even 0.5 is too big (unlikely), just take 0.5
+          bestBlob = await getBlobSize(0.5);
+        }
+
+        // download the optimized blob
+        const url = URL.createObjectURL(bestBlob);
+        const link = document.createElement('a');
+        link.download = 'collage.jpg';
+        link.href = url;
+        link.click();
+
+        // cleanup
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (err) {
+        console.error('Optimization failed:', err);
+        alert('Something went wrong while optimizing. Please try the manual download.');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = originalPointerEvents;
+        btn.style.opacity = '1';
+      }
     }
 
     // Initialize
