@@ -1215,42 +1215,42 @@
     function dragOver(e) {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      
+
       if (dragSrcIndex === null) return; // Should handle external files differently if needed
-      
+
       const target = e.currentTarget; // The thumbnail-container
       const rect = target.getBoundingClientRect();
       const midX = rect.left + rect.width / 2;
-      
+
       // Find index of target
       // We can't easily get index from event target directly unless we add it to dataset, 
       // but we passed it to the drop handler closure.
       // For dragOver visual feedback, we need to know if it's left or right.
-      
+
       target.classList.remove('drag-over-left', 'drag-over-right');
-      
+
       if (e.clientX < midX) {
         target.classList.add('drag-over-left');
       } else {
         target.classList.add('drag-over-right');
       }
     }
-    
+
     function dragLeave(e) {
-        e.currentTarget.classList.remove('drag-over-left', 'drag-over-right');
+      e.currentTarget.classList.remove('drag-over-left', 'drag-over-right');
     }
 
     function drop(e, dropIndex) {
       e.preventDefault();
       e.stopPropagation();
-      
+
       const target = e.currentTarget;
       target.classList.remove('drag-over-left', 'drag-over-right');
 
       if (dragSrcIndex === null || dragSrcIndex === dropIndex) return;
-      
+
       const currentImages = getCurrentSlide().images;
-      
+
       // Determine position based on drop (left or right of target)
       const rect = target.getBoundingClientRect();
       const midX = rect.left + rect.width / 2;
@@ -1258,14 +1258,14 @@
 
       // Remove the dragged image
       const [movedImage] = currentImages.splice(dragSrcIndex, 1);
-      
+
       // Calculate new index
       let newIndex = dropIndex;
       if (dragSrcIndex < dropIndex) {
-         newIndex = dropIndex - 1;
+        newIndex = dropIndex - 1;
       }
       if (insertAfter) {
-         newIndex = newIndex + 1;
+        newIndex = newIndex + 1;
       }
 
       // Insert at new position
@@ -1874,11 +1874,11 @@
 
     function switchSlide(index) {
       if (index < 0 || index >= slides.length) return;
-      
+
       // Save state of currently active slide before switching away
       // (Not strictly necessary as we update live, but good for future proofing)
       saveCurrentSlideState();
-      
+
       currentSlideIndex = index;
       const currentSlide = getCurrentSlide();
 
@@ -1887,22 +1887,22 @@
         btn.classList.remove('active');
         const onclick = btn.getAttribute('onclick');
         if (onclick && onclick.includes(`'${currentSlide.layout}'`)) {
-            btn.classList.add('active');
+          btn.classList.add('active');
         }
       });
 
       updateImageList();
-      
+
       // Important: Clear existing frames first
       const existingFrames = document.querySelectorAll('.frame');
       existingFrames.forEach(frame => frame.remove());
-      
+
       if (currentSlide.images.length > 0) {
-         createCollage();
+        createCollage();
       } else {
-         initCanvas(); // clear canvas if empty
+        initCanvas(); // clear canvas if empty
       }
-      
+
       updateOutputStats();
       updateButtonStates();
       renderSlideNav();
@@ -1941,12 +1941,12 @@
         const thumb = document.createElement('div');
         thumb.className = 'slide-thumb';
         if (index === currentSlideIndex) thumb.classList.add('active');
-        
+
         // Add draggable attributes for slides
         thumb.setAttribute('draggable', 'true');
-        
+
         thumb.onclick = () => switchSlide(index);
-        
+
         // Drag events for slides
         thumb.addEventListener('dragstart', (e) => handleSlideDragStart(e, index));
         thumb.addEventListener('dragover', (e) => handleSlideDragOver(e, index));
@@ -1995,68 +1995,68 @@
     }
 
     function handleSlideDragOver(e, index) {
-      e.preventDefault(); 
+      e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      
+
       if (dragSlideIndex === null || dragSlideIndex === index) return;
-      
+
       const target = e.currentTarget;
       const rect = target.getBoundingClientRect();
       const midX = rect.left + rect.width / 2;
-      
+
       target.classList.remove('drag-over-left', 'drag-over-right');
-      
+
       if (e.clientX < midX) {
         target.classList.add('drag-over-left');
       } else {
         target.classList.add('drag-over-right');
       }
     }
-    
+
     function handleSlideDragLeave(e) {
-        e.currentTarget.classList.remove('drag-over-left', 'drag-over-right');
+      e.currentTarget.classList.remove('drag-over-left', 'drag-over-right');
     }
 
     function handleSlideDrop(e, dropIndex) {
       e.preventDefault();
       e.stopPropagation();
-      
+
       const target = e.currentTarget;
       target.classList.remove('drag-over-left', 'drag-over-right', 'dragging');
-      
+
       if (dragSlideIndex === null || dragSlideIndex === dropIndex) return;
-      
+
       const rect = target.getBoundingClientRect();
       const midX = rect.left + rect.width / 2;
       const insertAfter = e.clientX > midX;
-      
+
       // Remove dragged slide
       const [movedSlide] = slides.splice(dragSlideIndex, 1);
-      
+
       // Calculate new insertion index
       let newIndex = dropIndex;
       if (dragSlideIndex < dropIndex) {
-         newIndex = dropIndex - 1;
+        newIndex = dropIndex - 1;
       }
       if (insertAfter) {
-         newIndex = newIndex + 1;
+        newIndex = newIndex + 1;
       }
-      
+
       slides.splice(newIndex, 0, movedSlide);
-      
+
       // Restore active slide index
       currentSlideIndex = slides.findIndex(s => s.id === activeSlideId);
-      
+
       renderSlideNav();
       updateOutputStats(); // In case numbering changed things in stats? (no, but good practice)
     }
-    
+
     function handleSlideDragEnd(e) {
-         e.target.classList.remove('dragging');
-         document.querySelectorAll('.slide-thumb').forEach(el => {
-             el.classList.remove('drag-over-left', 'drag-over-right');
-         });
-         dragSlideIndex = null;
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.slide-thumb').forEach(el => {
+        el.classList.remove('drag-over-left', 'drag-over-right');
+      });
+      dragSlideIndex = null;
     }
 
   </script>
